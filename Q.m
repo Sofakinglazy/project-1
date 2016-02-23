@@ -16,7 +16,7 @@ ylabel('Portfolio Return', 'FontSize', 12);
 
 % Generate 100 random portfolios 
 nAssets = length(m);
-nPortfolios = 100;
+nPortfolios = 10000;
 weights = zeros(nAssets, nPortfolios);
 for i = 1: nPortfolios
     weights(:, i) = rand(1, nAssets);
@@ -32,7 +32,7 @@ for i = 1: nPortfolios
 end
 
 % Plot the scatter
-figure(1),
+h1 = figure(1);
 plot(pRisk, pRet, 'rx');
 
 %% Efficint Frontier with Portfolio Object
@@ -40,20 +40,22 @@ m = [0.1 0.2 0.15]';
 C = [  0.005, -0.010, 0.004;
         -0.010, 0.040, -0.002;
         0.004, -0.002, 0.023];
-plotPortfolio(m, C);
+h = figure(2);
+plotPortfolio(m, C, h);
+
 
 %% Two-asset Pair Up
 mm = [0.1, 0.2]';
 CC = [  0.005, -0.010;
         -0.010, 0.040];
-plotPortfolio(mm, CC);
+plotPortfolio(mm, CC, h);
 
 mm = [0.2, 0.15]';
 CC = [  0.040, -0.002;
         -0.002, 0.023]; 
-plotPortfolio(mm, CC);
+plotPortfolio(mm, CC, h);
 
 mm = [0.10, 0.15]';
 CC = [  0.005, 0.004;
         0.004, 0.023]; 
-plotPortfolio(mm, CC);
+plotPortfolio(mm, CC, h);

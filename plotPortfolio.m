@@ -1,11 +1,11 @@
-function plotPortfolio(m, C)
+function plotPortfolio(m, C, h)
 
 p = Portfolio;
 p = Portfolio(p, 'AssetMean', m, 'AssetCovar', C);
 p = Portfolio(p, 'lowerbound', zeros(size(m)));
 p = Portfolio(p, 'aEquality', ones(size(m))','bEquality', 1);
 
-h = figure;
+figure(h),
 plotFrontier(p);
 % axis([0.02, 0.2, 0.12, 0.2]);
 hold on, grid on,
@@ -22,11 +22,12 @@ end
 % Calculate return for random portfolios
 pRet = zeros(nPortfolios, 1);
 pRisk = zeros(nPortfolios, 1);
+
 for i = 1: nPortfolios
     pRet(i) = dot(weights(:, i), m);
     pRisk(i) = sqrt(weights(:, i)' * C * weights(:, i));
 end
 
 % Plot the scatter
-figure(h),
-plot(pRisk', pRet, 'rx');
+ figure(h),
+ plot(pRisk', pRet, 'x');
