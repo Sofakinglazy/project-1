@@ -59,3 +59,10 @@ mm = [0.10, 0.15]';
 CC = [  0.005, 0.004;
         0.004, 0.023]; 
 plotPortfolio(mm, CC, h);
+
+%% Analyse Stock Data
+
+colClosePrice = 4;
+data = StockProcessing(colClosePrice);
+
+
