@@ -85,8 +85,9 @@ for i = 1: size(data, 2)
     diff(1, i) = norm(indexData - data(:, i));
 end
 
-min(diff)
-
+% label diff 
+label = 1 : size(diff, 2);
+diff = d
 
 
 

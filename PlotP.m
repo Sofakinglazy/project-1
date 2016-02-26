@@ -1,9 +1,13 @@
-function PlotPandB(m, C)
+function [W1] = PlotP(m, C, h, mode)
 
-[V1, M1, ~] = NaiveMV(m, C, 25);
+if (nargin < 4)
+    mode = '';
+end
+
+[V1, M1, W1] = NaiveMV(m, C, 25);
 
 % Plot the figure
-h = figure; 
+figure(h); 
 plot(V1, M1, 'b', 'LineWidth', 2);
 grid on, hold on,
 title('Mean Variance Portfolio', 'FontSize', 13);
@@ -28,18 +32,9 @@ for i = 1: nPortfolios
 end
 
 % Plot the scatter
-figure(h);
-plot(pRisk, pRet, 'rx');
-
-%% Efficint Frontier with Portfolio Object
-h1 = figure(2);
-plotPortfolio(m, C, h1);
-
-
-%% Two-asset Pair Up
-for i = 1 : size(nchoosek(m,2),1)
-    [mm, CC] = DecomMatrix(m, C, i);
-    plotPortfolio(mm, CC, h1);
+if (strcmp(mode,'scatter'))
+    figure(h);
+    plot(pRisk, pRet, 'rx');
 end
 
 end

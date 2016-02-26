@@ -1,4 +1,8 @@
-function plotPortfolio(m, C, h)
+function plotPortfolio(m, C, h, mode)
+
+if (nargin < 4)
+    mode = '';
+end
 
 p = Portfolio;
 p = Portfolio(p, 'AssetMean', m, 'AssetCovar', C);
@@ -29,5 +33,9 @@ for i = 1: nPortfolios
 end
 
 % Plot the scatter
- figure(h),
- plot(pRisk', pRet, 'x');
+if (strcmp(mode,'scatter'))
+     figure(h),
+     plot(pRisk', pRet, 'x');
+end
+
+end
