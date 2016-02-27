@@ -16,7 +16,7 @@ ylabel('Portfolio Return', 'FontSize', 12);
 
 % Generate 100 random portfolios 
 nAssets = length(m);
-nPortfolios = 1000;
+nPortfolios = 100;
 weights = zeros(nAssets, nPortfolios);
 for i = 1: nPortfolios
     weights(:, i) = rand(1, nAssets);
@@ -35,6 +35,7 @@ end
 if (strcmp(mode,'scatter'))
     figure(h);
     plot(pRisk, pRet, 'rx');
+    legend('Frontior', 'Random Portfolio');
 end
 
 end

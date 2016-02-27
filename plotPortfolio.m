@@ -9,6 +9,7 @@ p = Portfolio(p, 'AssetMean', m, 'AssetCovar', C);
 p = Portfolio(p, 'lowerbound', zeros(size(m)));
 p = Portfolio(p, 'aEquality', ones(size(m))','bEquality', 1);
 
+
 figure(h),
 plotFrontier(p);
 % axis([0.02, 0.2, 0.12, 0.2]);

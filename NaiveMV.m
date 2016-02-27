@@ -9,7 +9,7 @@ variable MaxReturnWeights(NAssets)
     minimize(-ERet' * MaxReturnWeights)
     subject to 
         MaxReturnWeights' * ones(NAssets, 1) == 1;
-        MaxReturnWeights > 0;
+        MaxReturnWeights >= 0;
 cvx_end
 % MaxReturnWeights = linprog(-ERet, [], [], Value1, 1, Value0);
 MaxReturn = MaxReturnWeights' * ERet;
@@ -20,7 +20,7 @@ variable MinVarWeights(NAssets)
     minimize(MinVarWeights' * ECov * MinVarWeights )
     subject to 
         MinVarWeights' * ones(NAssets, 1) == 1;
-        MinVarWeights > 0;
+        MinVarWeights >= 0;
 cvx_end
 
 

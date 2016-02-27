@@ -6,14 +6,17 @@ C = [  0.005 , -0.010, 0.004;
     
 h = figure(1);
 PlotP(m, C, h, 'scatter');
+legend('Efficient Frontier', 'Random Portfolio');
 h = figure(2);
 PlotB(m, C, h);
+legend('Three Stocks Frontier', 'Pair-Up Stocks Frontier',...
+    'Pair-Up Stocks Frontier', 'Pair-Up Stocks Frontier');
 
 %% Get Stock Data
 
 assets = 3; 
-seed = rng;
-%rng(seed);
+% seed = rng;
+rng(seed);
 
 colClosePrice = 4;
 data = StockProcessing(colClosePrice);
@@ -28,11 +31,14 @@ Ctr = cov(trData(:, index));
 mte = mean(teData(:, index))';
 Cte = cov(teData(:, index));
 
-%% Plot Frontior
-h = figure(3);
+% Plot Frontior
+h = figure(3);clf,
 [Bweights] = PlotP(mtr, Ctr, h);
-h = figure(4);
+
+h = figure(4);clf,
 PlotB(mtr, Ctr, h);
+legend('Three Stocks Frontier', 'Pair-Up Stocks Frontier',...
+    'Pair-Up Stocks Frontier', 'Pair-Up Stocks Frontier');
 
 % 1/N Portfolio 
 
@@ -44,6 +50,7 @@ risk = sqrt(weights * Ctr * weights');
 
 figure(3), 
 plot(risk, ret, 'g*');
+legend('Efficient Frontier', '1/N Portfolio');
 
 % Compare 1/N Portfolio with Best Portfolio
 
@@ -58,13 +65,14 @@ for i=1:nBWeights
     riskBest(i) = sqrt(Bweights(i, :) * Cte * Bweights(i, :)');
 end
 
-figure(5),
+figure(5), clf
 scatter(riskBest, retBest, 'b');
 hold on, grid on, 
 scatter(risk1N, ret1N, 'g*');
 title('Frontior on Test Data');
 xlabel('Mean Risk');
 ylabel('Predicted Return');
+legend('Efficient Frontier', '1/N Portfolio');
 
 % Evaluate Performance of Above Portfolios
 
@@ -85,7 +93,49 @@ for i = 1: size(data, 2)
     diff(1, i) = norm(indexData - data(:, i));
 end
 
-min(diff)
+[diff, Index] = sort(diff, 'ascend');
+nSimilar = 6; 
+Index = Index(1:nSimilar);
+
+%     cvx_begin quiet 
+%         variable w22( cols );
+%         minimize( norm(indexData-data * w22) );
+%         subject to 
+%              length(find(abs(w22)>= 1e-5)) == 6;
+% %             w22 * ones(size(w22))' == 1;
+%              sum(w22) == 1;
+%      cvx_end
+
+%% Sparse Index Tracking Portfolio 
+
+nStep = 100;
+tau = linspace(0.01, 0.7, nStep);
+w = zeros(cols, nStep);
+% fh2 = zeros(rows, nStep);
+iNzero = zeros(nStep, 1);
+for i=1:nStep
+    cvx_begin quiet 
+        variable w22( cols );
+        minimize( norm(indexData-data * w22) + tau(i)*norm(w22,1) );
+        subject to
+%             w22 * ones(size(w22))' == 1; 
+    cvx_end
+    
+    w(:, i) = w22;
+%     fh2(:, i) = Y * w22;
+    
+    % Relevant variables 
+     iNzero(i, 1) = length(find(abs(w22) > 1e-5));
+end 
+
+figure(6), clf,
+plot(tau, iNzero, 'k', 'LineWidth', 2);
+title('Relation between Number of Non-zeros Weights and Tau');
+grid on, grid minor,
+xlabel('Tau');
+ylabel('Number of Non-zeros Weights');
+
+
 
 
 
