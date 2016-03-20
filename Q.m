@@ -5,18 +5,22 @@ C = [  0.005 , -0.010, 0.004;
         0.004, -0.002, 0.023];
     
 h = figure(1);
-PlotP(m, C, h, 'scatter');
+clf,
+PlotP(m, C, h);
 legend('Efficient Frontier', 'Random Portfolio');
 h = figure(2);
-PlotB(m, C, h);
-legend('Three Stocks Frontier', 'Pair-Up Stocks Frontier',...
-    'Pair-Up Stocks Frontier', 'Pair-Up Stocks Frontier');
+clf,
+PlotB(m, C, h, 'scatter');
+legend('Three Stocks Frontier', 'Random Portfolio of Three Stocks',...
+    'Pair-Up Stocks Frontier', 'Random Portfolio of Pair-Up Stocks', ...
+    'Pair-Up Stocks Frontier', 'Random Portfolio of Pair-Up Stocks', ...
+    'Pair-Up Stocks Frontier', 'Random Portfolio of Pair-Up Stocks');
 
 %% Get Stock Data
 
 assets = 3; 
-% seed = rng;
-rng(seed);
+seed = rng;
+% rng(seed);
 
 colClosePrice = 4;
 data = StockProcessing(colClosePrice);
@@ -97,21 +101,13 @@ end
 nSimilar = 6; 
 Index = Index(1:nSimilar);
 
-%     cvx_begin quiet 
-%         variable w22( cols );
-%         minimize( norm(indexData-data * w22) );
-%         subject to 
-%              length(find(abs(w22)>= 1e-5)) == 6;
-% %             w22 * ones(size(w22))' == 1;
-%              sum(w22) == 1;
-%      cvx_end
+
 
 %% Sparse Index Tracking Portfolio 
 
 nStep = 100;
 tau = linspace(0.01, 0.7, nStep);
 w = zeros(cols, nStep);
-% fh2 = zeros(rows, nStep);
 iNzero = zeros(nStep, 1);
 for i=1:nStep
     cvx_begin quiet 
@@ -122,7 +118,6 @@ for i=1:nStep
     cvx_end
     
     w(:, i) = w22;
-%     fh2(:, i) = Y * w22;
     
     % Relevant variables 
      iNzero(i, 1) = length(find(abs(w22) > 1e-5));

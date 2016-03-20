@@ -17,7 +17,7 @@ hold on, grid on,
 
 % Generate 100 random portfolios 
 nAssets = length(m);
-nPortfolios = 100;
+nPortfolios = 10000;
 weights = zeros(nAssets, nPortfolios);
 for i = 1: nPortfolios
     weights(:, i) = rand(1, nAssets);
